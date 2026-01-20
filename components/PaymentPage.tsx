@@ -21,47 +21,62 @@ export const PaymentPage: React.FC<PaymentPageProps> = ({ userData, onSuccess, o
   const LIVE_KEY = "pk_live_21ad8f84a4b6a5d34c6d57dd516aafcc95f90e8c"; 
 
   useEffect(() => {
-    // --- DOM INTERCEPTOR (appendChild Override) ---
-    // This logic intercepts the browser's native appendChild method.
-    // When Paystack (or any script) tries to add an iframe to the page,
-    // we catch it and force the 'allow="clipboard-write"' attribute 
-    // BEFORE it enters the DOM. This satisfies strict browser security policies.
+    // --- ROBUST DOM INTERCEPTOR ---
+    // This logic intercepts both appendChild and insertBefore.
+    // It ensures that any iframe injected by Paystack (or other scripts)
+    // gets the 'allow' attribute with clipboard-write and fullscreen permissions
+    // BEFORE it is effectively rendered/restricted by the browser.
     
     const originalAppendChild = Node.prototype.appendChild;
+    const originalInsertBefore = Node.prototype.insertBefore;
+    
+    const PERMISSIONS = 'clipboard-write; payment; microphone; camera; fullscreen';
 
-    Node.prototype.appendChild = function<T extends Node>(this: Node, node: T): T {
+    // Helper to apply permissions to a node if it is an iframe or contains one
+    const applyPermissions = (node: Node) => {
       // 1. Check if the specific node being added is an IFRAME
       if (node.nodeName === 'IFRAME') {
         try {
-          (node as unknown as HTMLElement).setAttribute('allow', 'clipboard-write; payment; microphone; camera');
+          const iframe = node as unknown as HTMLIFrameElement;
+          iframe.setAttribute('allow', PERMISSIONS);
+          // Explicitly set allowFullscreen property if available
+          iframe.allowFullscreen = true;
         } catch (e) {
-          // Ignore errors if setAttribute fails
+          // Ignore errors
         }
       } 
-      // 2. Check if the node is a container (like a div) that holds the iframe inside it
+      // 2. Check if the node is a container that holds the iframe inside it
       else if (node instanceof HTMLElement) {
         try {
-           // We check for iframes inside the container
            const iframes = node.querySelectorAll('iframe');
            if (iframes.length > 0) {
              iframes.forEach((iframe) => {
-               iframe.setAttribute('allow', 'clipboard-write; payment; microphone; camera');
+               iframe.setAttribute('allow', PERMISSIONS);
+               iframe.allowFullscreen = true;
              });
            }
         } catch (e) {
           // Ignore errors
         }
       }
+    };
 
-      // 3. Proceed with the original append action
-      // We cast the return value to T because .call() returns 'any' or 'unknown' in some TS configurations,
-      // and we need to match the generic return type T.
+    // Override appendChild
+    Node.prototype.appendChild = function<T extends Node>(this: Node, node: T): T {
+      applyPermissions(node);
       return originalAppendChild.call(this, node) as T;
     } as any;
 
+    // Override insertBefore
+    Node.prototype.insertBefore = function<T extends Node>(this: Node, node: T, child: Node | null): T {
+      applyPermissions(node);
+      return originalInsertBefore.call(this, node, child) as T;
+    } as any;
+
     return () => {
-      // Cleanup: Restore the original appendChild method when component unmounts
+      // Cleanup: Restore original methods
       Node.prototype.appendChild = originalAppendChild;
+      Node.prototype.insertBefore = originalInsertBefore;
     };
   }, []);
 
