@@ -22,18 +22,40 @@ export const PaymentPage: React.FC<PaymentPageProps> = ({ userData, onSuccess, o
 
   useEffect(() => {
     // --- THE INTERCEPTOR (Force Iframe Permissions) ---
-    // This watches the DOM for the creation of the Paystack iframe 
-    // and immediately adds the 'allow="clipboard-write"' attribute.
+    // We use two strategies to ensure the Paystack iframe gets the 'allow="clipboard-write"' attribute
+    // BEFORE the browser restricts it.
+
+    // STRATEGY 1: Monkey Patch document.createElement
+    // This catches the iframe creation at the exact moment of instantiation, before it even exists in the DOM.
+    // This is the strongest fix for mobile browsers.
+    const originalCreateElement = document.createElement;
+    
+    // Using 'any' to bypass strict TS overload matching for this specific patch
+    document.createElement = function(tagName: string, options?: any) {
+      const element = originalCreateElement.call(document, tagName, options);
+      // Check if the created element is an iframe
+      if (tagName && typeof tagName === 'string' && tagName.toLowerCase() === 'iframe') {
+        try {
+          element.setAttribute('allow', 'clipboard-write; payment; microphone; camera');
+        } catch (e) {
+          console.warn("Failed to set attribute on iframe creation", e);
+        }
+      }
+      return element;
+    } as any;
+
+    // STRATEGY 2: MutationObserver
+    // This watches the DOM for nodes added via other methods (like innerHTML) or if the patch is bypassed.
     const observer = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {
         mutation.addedNodes.forEach((node) => {
-          // Check if the added node is an iframe (using nodeName for robustness)
+          // Check if the added node is an iframe
           if (node.nodeName === 'IFRAME') {
             const iframe = node as HTMLIFrameElement;
             iframe.setAttribute('allow', 'clipboard-write; payment; microphone; camera');
           } 
-          // Check if the added node is a container that might contain an iframe
-          else if (node.nodeType === 1 && (node as Element).querySelector) { // Node.ELEMENT_NODE
+          // Check if the added node is a container (div) that contains an iframe
+          else if (node.nodeType === 1 && (node as Element).querySelectorAll) {
              const el = node as Element;
              const iframes = el.querySelectorAll('iframe');
              iframes.forEach((iframe) => {
@@ -44,10 +66,12 @@ export const PaymentPage: React.FC<PaymentPageProps> = ({ userData, onSuccess, o
       });
     });
 
-    // Start observing the body for added nodes (subtree: true catches nested elements)
+    // Start observing the body for added nodes
     observer.observe(document.body, { childList: true, subtree: true });
 
     return () => {
+      // Cleanup: Restore original function and disconnect observer
+      document.createElement = originalCreateElement;
       observer.disconnect();
     };
   }, []);
