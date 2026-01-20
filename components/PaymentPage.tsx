@@ -1,3 +1,4 @@
+
 import React, { useEffect } from 'react';
 import { Button } from './Button';
 import { UserData } from '../types';
@@ -21,38 +22,34 @@ export const PaymentPage: React.FC<PaymentPageProps> = ({ userData, onSuccess, o
   const LIVE_KEY = "pk_live_21ad8f84a4b6a5d34c6d57dd516aafcc95f90e8c"; 
 
   useEffect(() => {
-    // --- ROBUST DOM INTERCEPTOR ---
+    // --- DOM INTERCEPTOR (appendChild & insertBefore Override) ---
     // This logic intercepts both appendChild and insertBefore.
-    // It ensures that any iframe injected by Paystack (or other scripts)
-    // gets the 'allow' attribute with clipboard-write and fullscreen permissions
-    // BEFORE it is effectively rendered/restricted by the browser.
+    // It catches the Paystack iframe the moment it's created and forces 
+    // the 'allow="clipboard-write"' attribute BEFORE it hits the DOM.
+    // This satisfies strict browser security policies (Safari/Chrome Mobile).
     
     const originalAppendChild = Node.prototype.appendChild;
     const originalInsertBefore = Node.prototype.insertBefore;
-    
+
     const PERMISSIONS = 'clipboard-write; payment; microphone; camera; fullscreen';
 
-    // Helper to apply permissions to a node if it is an iframe or contains one
-    const applyPermissions = (node: Node) => {
+    // Helper to inject permissions into a node
+    const injectPermissions = (node: Node) => {
       // 1. Check if the specific node being added is an IFRAME
       if (node.nodeName === 'IFRAME') {
         try {
-          const iframe = node as unknown as HTMLIFrameElement;
-          iframe.setAttribute('allow', PERMISSIONS);
-          // Explicitly set allowFullscreen property if available
-          iframe.allowFullscreen = true;
+          (node as unknown as HTMLElement).setAttribute('allow', PERMISSIONS);
         } catch (e) {
           // Ignore errors
         }
       } 
-      // 2. Check if the node is a container that holds the iframe inside it
+      // 2. Check if the node is a container (like a div) that holds the iframe inside it
       else if (node instanceof HTMLElement) {
         try {
            const iframes = node.querySelectorAll('iframe');
            if (iframes.length > 0) {
              iframes.forEach((iframe) => {
                iframe.setAttribute('allow', PERMISSIONS);
-               iframe.allowFullscreen = true;
              });
            }
         } catch (e) {
@@ -63,18 +60,20 @@ export const PaymentPage: React.FC<PaymentPageProps> = ({ userData, onSuccess, o
 
     // Override appendChild
     Node.prototype.appendChild = function<T extends Node>(this: Node, node: T): T {
-      applyPermissions(node);
+      injectPermissions(node);
+      // Proceed with original append
       return originalAppendChild.call(this, node) as T;
     } as any;
 
-    // Override insertBefore
-    Node.prototype.insertBefore = function<T extends Node>(this: Node, node: T, child: Node | null): T {
-      applyPermissions(node);
-      return originalInsertBefore.call(this, node, child) as T;
+    // Override insertBefore (Crucial: Many scripts use this instead of appendChild)
+    Node.prototype.insertBefore = function<T extends Node>(this: Node, newNode: T, referenceNode: Node | null): T {
+      injectPermissions(newNode);
+      // Proceed with original insert
+      return originalInsertBefore.call(this, newNode, referenceNode) as T;
     } as any;
 
     return () => {
-      // Cleanup: Restore original methods
+      // Cleanup: Restore the original methods when component unmounts
       Node.prototype.appendChild = originalAppendChild;
       Node.prototype.insertBefore = originalInsertBefore;
     };
@@ -139,7 +138,7 @@ export const PaymentPage: React.FC<PaymentPageProps> = ({ userData, onSuccess, o
             
             <div className="flex justify-between items-center py-4">
                 <span className="text-xl font-bold text-gray-700">Total</span>
-                <span className="text-3xl font-extrabold text-emerald-600">₦{AMOUNT_NAIRA.toLocaleString()}</span>
+                <span className="text-3xl font-extrabold text-emerald-600">â‚¦{AMOUNT_NAIRA.toLocaleString()}</span>
             </div>
 
             <div className="space-y-3">
