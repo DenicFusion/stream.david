@@ -1,4 +1,3 @@
-
 import React, { useEffect } from 'react';
 import { Button } from './Button';
 import { UserData } from '../types';
@@ -22,58 +21,74 @@ export const PaymentPage: React.FC<PaymentPageProps> = ({ userData, onSuccess, o
   const LIVE_KEY = "pk_live_21ad8f84a4b6a5d34c6d57dd516aafcc95f90e8c"; 
 
   useEffect(() => {
-    // --- DOM INTERCEPTOR (appendChild & insertBefore Override) ---
-    // This logic intercepts both appendChild and insertBefore.
-    // It catches the Paystack iframe the moment it's created and forces 
-    // the 'allow="clipboard-write"' attribute BEFORE it hits the DOM.
-    // This satisfies strict browser security policies (Safari/Chrome Mobile).
+    // --- DUAL-LAYER PERMISSION ENFORCER ---
     
+    // STRATEGY 1: MutationObserver
+    // Watches for any new nodes added to the DOM. If an iframe appears, 
+    // it forces the permissions immediately. This works even if insertBefore is used
+    // or if the script uses internal browser methods.
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        mutation.addedNodes.forEach((node) => {
+          if (node.nodeName === 'IFRAME') {
+            const iframe = node as HTMLIFrameElement;
+            forcePermissions(iframe);
+          } else if (node instanceof HTMLElement) {
+            // Check if an iframe is nested inside the added node (e.g. a wrapper div)
+            const iframes = node.querySelectorAll('iframe');
+            iframes.forEach(forcePermissions);
+          }
+        });
+      });
+    });
+
+    // Start observing the document body for added nodes
+    observer.observe(document.body, { childList: true, subtree: true });
+
+    // STRATEGY 2: Prototype Interception (Type-Safe)
+    // Intercepts the actual JS calls to create/insert elements as a first line of defense.
     const originalAppendChild = Node.prototype.appendChild;
     const originalInsertBefore = Node.prototype.insertBefore;
+    
+    // Comprehensive permission string required for modern browsers
+    const PERMISSIONS = 'clipboard-write; payment; microphone; camera; fullscreen; display-capture';
 
-    const PERMISSIONS = 'clipboard-write; payment; microphone; camera; fullscreen';
-
-    // Helper to inject permissions into a node
-    const injectPermissions = (node: Node) => {
-      // 1. Check if the specific node being added is an IFRAME
-      if (node.nodeName === 'IFRAME') {
-        try {
-          (node as unknown as HTMLElement).setAttribute('allow', PERMISSIONS);
-        } catch (e) {
-          // Ignore errors
+    function forcePermissions(iframe: HTMLIFrameElement) {
+      try {
+        const current = iframe.getAttribute('allow') || '';
+        // Only append if not already present to avoid duplication
+        if (!current.includes('clipboard-write')) {
+            iframe.setAttribute('allow', `${current} ${PERMISSIONS}`.trim());
         }
-      } 
-      // 2. Check if the node is a container (like a div) that holds the iframe inside it
-      else if (node instanceof HTMLElement) {
-        try {
-           const iframes = node.querySelectorAll('iframe');
-           if (iframes.length > 0) {
-             iframes.forEach((iframe) => {
-               iframe.setAttribute('allow', PERMISSIONS);
-             });
-           }
-        } catch (e) {
-          // Ignore errors
-        }
+        iframe.allowFullscreen = true;
+      } catch (e) {
+        // Ignore errors if node is restricted
       }
-    };
+    }
 
-    // Override appendChild
+    // Override appendChild with proper TS typing
     Node.prototype.appendChild = function<T extends Node>(this: Node, node: T): T {
-      injectPermissions(node);
-      // Proceed with original append
+      if (node.nodeName === 'IFRAME') {
+        forcePermissions(node as unknown as HTMLIFrameElement);
+      } else if (node instanceof HTMLElement && node.querySelector('iframe')) {
+        node.querySelectorAll('iframe').forEach(forcePermissions);
+      }
       return originalAppendChild.call(this, node) as T;
     } as any;
 
-    // Override insertBefore (Crucial: Many scripts use this instead of appendChild)
-    Node.prototype.insertBefore = function<T extends Node>(this: Node, newNode: T, referenceNode: Node | null): T {
-      injectPermissions(newNode);
-      // Proceed with original insert
-      return originalInsertBefore.call(this, newNode, referenceNode) as T;
+    // Override insertBefore with proper TS typing
+    Node.prototype.insertBefore = function<T extends Node>(this: Node, node: T, child: Node | null): T {
+      if (node.nodeName === 'IFRAME') {
+        forcePermissions(node as unknown as HTMLIFrameElement);
+      } else if (node instanceof HTMLElement && node.querySelector('iframe')) {
+        node.querySelectorAll('iframe').forEach(forcePermissions);
+      }
+      return originalInsertBefore.call(this, node, child) as T;
     } as any;
 
     return () => {
-      // Cleanup: Restore the original methods when component unmounts
+      // Cleanup: Stop observing and restore original methods
+      observer.disconnect();
       Node.prototype.appendChild = originalAppendChild;
       Node.prototype.insertBefore = originalInsertBefore;
     };
@@ -138,7 +153,7 @@ export const PaymentPage: React.FC<PaymentPageProps> = ({ userData, onSuccess, o
             
             <div className="flex justify-between items-center py-4">
                 <span className="text-xl font-bold text-gray-700">Total</span>
-                <span className="text-3xl font-extrabold text-emerald-600">â‚¦{AMOUNT_NAIRA.toLocaleString()}</span>
+                <span className="text-3xl font-extrabold text-emerald-600">₦{AMOUNT_NAIRA.toLocaleString()}</span>
             </div>
 
             <div className="space-y-3">
