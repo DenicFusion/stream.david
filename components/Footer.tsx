@@ -55,9 +55,9 @@ export const Footer: React.FC = () => {
             © {new Date().getFullYear()} Stream Africa. All rights reserved.
           </div>
           <div className="text-sm">
-             <a href="https://www.emzzytech.name.ng" target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-emerald-400 transition-colors flex items-center gap-1 group">
+             <a href="https://www.emzzytech.name.ng" target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-cyan-300 transition-colors flex items-center gap-1 group">
                  <span>Powered by</span>
-                 <span className="font-bold text-gray-500 group-hover:text-emerald-400">EmzzyTech</span>
+                 <span className="font-bold text-cyan-300">EmzzyTech</span>
              </a>
           </div>
         </div>

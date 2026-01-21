@@ -3,17 +3,13 @@ import { FeatureProps } from '../types';
 
 const FeatureCard: React.FC<FeatureProps> = ({ title, description, price, icon, image, reverse }) => {
   return (
+    // Note on Flex Logic: 
+    // - flex-col: Stacks vertically. Since text block is 1st in HTML now, Text is Top, Image is Bottom on Mobile.
+    // - lg:flex-row: Text Left, Image Right.
+    // - lg:flex-row-reverse: Text Right, Image Left.
     <div className={`flex flex-col ${reverse ? 'lg:flex-row-reverse' : 'lg:flex-row'} items-center gap-16 py-20 border-b border-white/5 last:border-0`}>
-      <div className="w-full lg:w-1/2">
-        <div className="relative rounded-xl overflow-hidden shadow-2xl border border-white/10 group">
-          <div className="absolute inset-0 bg-slate-900/40 group-hover:bg-transparent transition-all duration-500 z-10"></div>
-          <img 
-            src={image || "https://picsum.photos/600/400"} 
-            alt={title} 
-            className="w-full h-auto object-cover transform group-hover:scale-105 transition-transform duration-700" 
-          />
-        </div>
-      </div>
+      
+      {/* TEXT BLOCK - Placed First for Mobile Priority */}
       <div className="w-full lg:w-1/2 space-y-6">
         <div className="w-14 h-14 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-500 border border-emerald-500/20 mb-4">
           {icon}
@@ -29,6 +25,19 @@ const FeatureCard: React.FC<FeatureProps> = ({ title, description, price, icon, 
           {description}
         </div>
       </div>
+
+      {/* IMAGE BLOCK */}
+      <div className="w-full lg:w-1/2">
+        <div className="relative rounded-xl overflow-hidden shadow-2xl border border-white/10 group">
+          <div className="absolute inset-0 bg-slate-900/40 group-hover:bg-transparent transition-all duration-500 z-10"></div>
+          <img 
+            src={image || "https://picsum.photos/600/400"} 
+            alt={title} 
+            className="w-full h-auto object-cover transform group-hover:scale-105 transition-transform duration-700" 
+          />
+        </div>
+      </div>
+
     </div>
   );
 };
