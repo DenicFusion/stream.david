@@ -5,10 +5,11 @@ import { UserData } from '../types';
 interface SignupFormProps {
   onSubmit: (data: UserData) => void;
   onBack: () => void;
+  initialData?: UserData | null;
 }
 
-export const SignupForm: React.FC<SignupFormProps> = ({ onSubmit, onBack }) => {
-  const [formData, setFormData] = useState<UserData>({
+export const SignupForm: React.FC<SignupFormProps> = ({ onSubmit, onBack, initialData }) => {
+  const [formData, setFormData] = useState<UserData>(initialData || {
     name: '',
     username: '',
     email: '',

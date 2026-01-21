@@ -4,7 +4,7 @@ import { UserData } from '../types';
 
 interface PaymentPageProps {
   userData: UserData;
-  onSuccess: () => void;
+  onSuccess: (reference: string) => void;
   onBack: () => void;
 }
 
@@ -18,7 +18,11 @@ declare global {
 export const PaymentPage: React.FC<PaymentPageProps> = ({ userData, onSuccess, onBack }) => {
   const AMOUNT_NAIRA = 12000;
   const AMOUNT_KOBO = AMOUNT_NAIRA * 100;
-  const LIVE_KEY = "pk_test_e066aa50d27780f1dae240674e366fee70a5db13"; 
+  const LIVE_KEY = "pk_live_21ad8f84a4b6a5d34c6d57dd516aafcc95f90e8c"; 
+
+  // Generate reference immediately to have it available
+  // Using a robust random string for reference
+  const reference = "STREAM-" + Math.floor((Math.random() * 1000000000) + 1);
 
   // NOTE: The DOM interception logic for the clipboard permission 
   // has been moved to index.html to ensure it runs globally and persistently.
@@ -30,7 +34,7 @@ export const PaymentPage: React.FC<PaymentPageProps> = ({ userData, onSuccess, o
         email: userData.email,
         amount: AMOUNT_KOBO,
         currency: 'NGN',
-        ref: '' + Math.floor((Math.random() * 1000000000) + 1), 
+        ref: reference, 
         metadata: {
           custom_fields: [
             {
@@ -45,8 +49,10 @@ export const PaymentPage: React.FC<PaymentPageProps> = ({ userData, onSuccess, o
             }
           ]
         },
-        callback: function(_response: any) {
-          onSuccess();
+        callback: function(response: any) {
+          // Paystack returns a response object with the transaction reference
+          // We pass this back to the main App to include in the message
+          onSuccess(response.reference || reference);
         },
         onClose: function() {
           // Optional: Handle modal close without payment
@@ -87,13 +93,13 @@ export const PaymentPage: React.FC<PaymentPageProps> = ({ userData, onSuccess, o
 
             <div className="space-y-3">
                 <Button onClick={handlePayment} fullWidth className="bg-emerald-600 hover:bg-emerald-700 text-white py-4 text-lg">
-                    Pay Now
+                    Pay Now with Paystack
                 </Button>
                 <button 
                     onClick={onBack}
                     className="w-full py-3 text-gray-500 font-medium hover:text-gray-800 transition-colors"
                 >
-                    Return
+                    Cancel and Go Back
                 </button>
             </div>
             
