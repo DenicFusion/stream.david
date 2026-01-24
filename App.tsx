@@ -38,6 +38,7 @@ const App: React.FC = () => {
   const [currentView, setCurrentView] = useState<ViewState>('HOME');
   const [userData, setUserData] = useState<UserData | null>(null);
   const [paymentRef, setPaymentRef] = useState<string>('');
+  const [paymentBank, setPaymentBank] = useState<string>('');
   const [isLoading, setIsLoading] = useState(false);
 
   // 1. Browser History Handling for Mobile Back Button
@@ -69,19 +70,17 @@ const App: React.FC = () => {
       setCurrentView(view);
       setIsLoading(false);
       window.scrollTo(0, 0);
-    }, 1500); // Reduced to 1.5s as requested
+    }, 1500); 
   };
 
   const handleAuthSubmit = (data: UserData) => {
     setUserData(data);
     
-    // Check if user is already activated (e.g. from Login)
     if (data.isActivated) {
         transitionTo('DASHBOARD');
         return;
     }
 
-    // Configurable Flow for New/Unactivated Users
     if (SHOW_DASHBOARD_BEFORE_PAYMENT) {
        transitionTo('DASHBOARD');
     } else {
@@ -89,15 +88,13 @@ const App: React.FC = () => {
     }
   };
 
-  const handlePaymentSuccess = (reference: string) => {
+  const handlePaymentSuccess = (reference: string, bankInfo?: string) => {
     setPaymentRef(reference);
+    setPaymentBank(bankInfo || '');
     
-    // Update User Activation Status locally and in Storage
     if (userData) {
         const updatedUser = { ...userData, isActivated: true };
         setUserData(updatedUser);
-        
-        // Persist to Local Storage
         localStorage.setItem('stream_user', JSON.stringify(updatedUser));
     }
 
@@ -106,7 +103,17 @@ const App: React.FC = () => {
 
   const handleRedirect = () => {
     if (userData) {
-      const message = `Hello Stream Africa,%0A%0AI have just completed my payment and registration.%0A%0A*Here are my details:*%0AName: ${userData.name}%0AUsername: ${userData.username}%0AEmail: ${userData.email}%0APhone: ${userData.phone}%0APayment Ref: ${paymentRef}%0A%0APlease verify my account.`;
+      const isManual = !!paymentBank && !paymentRef;
+      
+      let message = `Hello Stream Africa,%0A%0AI have just completed my payment and registration.`;
+      
+      if (isManual) {
+          message += `%0A%0A*Method:* Manual Bank Transfer%0A*Paid to:* ${paymentBank}`;
+      } else {
+          message += `%0A%0A*Method:* Instant Online Payment%0A*Ref:* ${paymentRef}`;
+      }
+
+      message += `%0A%0A*Details:*%0AName: ${userData.name}%0AUsername: ${userData.username}%0APhone: ${userData.phone}%0A%0APlease verify my account activation.`;
       
       if (REDIRECT_CONFIG.useWhatsApp) {
         const url = `https://wa.me/${REDIRECT_CONFIG.whatsAppNumber}?text=${message}`;
@@ -145,7 +152,6 @@ const App: React.FC = () => {
           />
         );
       case 'DASHBOARD':
-        // Demo Mode Dashboard (Locked)
         if (!userData) return <SignupForm onSubmit={handleAuthSubmit} onBack={() => window.history.back()} />;
         return (
            <Dashboard 
@@ -163,37 +169,46 @@ const App: React.FC = () => {
           />
         );
       case 'SUCCESS':
+        const isManual = !!paymentBank && !paymentRef;
         return (
           <div className="min-h-screen bg-stream-dark flex items-center justify-center p-4">
             <div className="text-center max-w-lg w-full bg-stream-card p-10 rounded-3xl border border-stream-green/20 shadow-2xl relative overflow-hidden">
-              <div className="w-20 h-20 bg-emerald-500/20 rounded-full flex items-center justify-center mx-auto mb-6 relative z-10">
-                <svg className="w-10 h-10 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="w-20 h-20 bg-stream-green/20 rounded-full flex items-center justify-center mx-auto mb-6 relative z-10">
+                <svg className="w-10 h-10 text-stream-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
                 </svg>
               </div>
-              <h2 className="text-4xl font-bold text-white mb-4 relative z-10">Welcome to STREAM!</h2>
+              <h2 className="text-4xl font-bold text-white mb-4 relative z-10">
+                 {isManual ? 'Transfer Received!' : 'Activation Success!'}
+              </h2>
               <p className="text-xl text-gray-300 mb-6 relative z-10">
-                Your payment was successful. Your account is now active.
+                {isManual 
+                  ? 'Your transfer notification has been received. Our team will verify your payment shortly.' 
+                  : 'Your payment was successful. Your account is now fully active and verified.'}
               </p>
+              
               <div className="bg-white/5 p-4 rounded-xl mb-8 border border-white/5 relative z-10">
-                <p className="text-sm text-gray-400 mb-1">Payment Reference</p>
-                <div className="font-mono text-white text-sm break-all select-all">
-                  {paymentRef}
+                <p className="text-xs text-gray-500 mb-1 uppercase tracking-widest font-bold">
+                  {isManual ? 'Chosen Bank Account' : 'Payment Reference'}
+                </p>
+                <div className="font-mono text-white text-sm break-all select-all font-bold">
+                  {isManual ? paymentBank : paymentRef}
                 </div>
               </div>
+
               <div className="mb-6 relative z-10">
-                 <p className="text-emerald-300 font-semibold animate-pulse text-sm uppercase tracking-wide">
+                 <p className="text-stream-green font-semibold animate-pulse text-sm uppercase tracking-wide">
                    ⚠️ Kindly click the button below to continue
                  </p>
               </div>
               <div className="relative group z-10">
-                <div className="absolute -inset-1 bg-gradient-to-r from-emerald-600 to-green-600 rounded-lg blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-pulse"></div>
+                <div className="absolute -inset-1 bg-stream-green rounded-lg blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-pulse"></div>
                 <Button 
                     onClick={handleRedirect} 
                     fullWidth 
-                    className="relative text-lg py-4 !bg-emerald-500 hover:!bg-emerald-400 !shadow-[0_0_20px_rgba(16,185,129,0.6)] !border-none"
+                    className="relative text-lg py-4 !shadow-[0_0_20px_rgba(14,165,233,0.4)] !border-none"
                 >
-                  {REDIRECT_CONFIG.useWhatsApp ? 'Complete Registration on WhatsApp' : 'Join Telegram Channel'}
+                  {REDIRECT_CONFIG.useWhatsApp ? 'Submit Receipt on WhatsApp' : 'Finalize on Telegram'}
                 </Button>
               </div>
             </div>

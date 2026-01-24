@@ -29,7 +29,24 @@
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://js.paystack.co/v1/inline.js"></script>
-    <script>
+    <script type="module">
+      import { THEME_COLOR } from './config.ts';
+      
+      const themeColors = {
+        BLUE: {
+          primary: '#0ea5e9', // Sky 500
+          accent: '#06b6d4',  // Cyan 500
+          glow: 'rgba(14, 165, 233, 0.3)',
+        },
+        GREEN: {
+          primary: '#10b981', // Emerald 500
+          accent: '#34d399',  // Accent
+          glow: 'rgba(16, 185, 129, 0.3)',
+        }
+      };
+
+      const selected = themeColors[THEME_COLOR] || themeColors.BLUE;
+
       tailwind.config = {
         theme: {
           extend: {
@@ -37,8 +54,8 @@
               stream: {
                 dark: '#0f172a',
                 light: '#f8fafc',
-                green: '#10b981',
-                accent: '#34d399',
+                green: selected.primary, // Keeping key name for compatibility
+                accent: selected.accent,
                 card: '#1e293b'
               }
             },
@@ -66,7 +83,7 @@
             }
           }
         }
-      }
+      };
     </script>
     <script>
       // GLOBAL PERMISSION PATCH FOR PAYSTACK

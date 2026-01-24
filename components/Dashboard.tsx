@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { UserData } from '../types';
 import { Button } from './Button';
 import { NotificationToast } from './NotificationToast';
+import { THEME_COLOR } from '../config';
 
 interface DashboardProps {
   userData: UserData;
@@ -12,6 +13,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ userData, onActivate }) =>
   const [activeTab, setActiveTab] = useState<'HOME' | 'EARN' | 'BAZAAR' | 'ACADEMY' | 'PROFILE'>('HOME');
   const [showActivateModal, setShowActivateModal] = useState(false);
   const isActivated = userData.isActivated || false;
+  const isBlue = THEME_COLOR === 'BLUE';
 
   const handleProtectedAction = () => {
     if (!isActivated) {
@@ -40,7 +42,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ userData, onActivate }) =>
           <p className="text-gray-400 text-xs flex items-center gap-1">
              Status: 
              {isActivated ? (
-               <span className="text-emerald-400 font-bold flex items-center gap-1">
+               <span className={`${isBlue ? 'text-sky-400' : 'text-emerald-400'} font-bold flex items-center gap-1`}>
                  Verified <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/></svg>
                </span>
              ) : (
@@ -57,15 +59,15 @@ export const Dashboard: React.FC<DashboardProps> = ({ userData, onActivate }) =>
       <main className="px-4 space-y-6">
         
         {/* Wallet Card */}
-        <div className="bg-gradient-to-br from-slate-900 to-[#0f172a] rounded-2xl p-6 border border-white/10 shadow-xl relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-stream-green/10 rounded-full blur-3xl -mr-10 -mt-10"></div>
+        <div className={`bg-gradient-to-br ${isBlue ? 'from-blue-900/40 to-[#0f172a]' : 'from-slate-900 to-[#0f172a]'} rounded-2xl p-6 border border-white/10 shadow-xl relative overflow-hidden`}>
+          <div className={`absolute top-0 right-0 w-32 h-32 ${isBlue ? 'bg-sky-500/10' : 'bg-stream-green/10'} rounded-full blur-3xl -mr-10 -mt-10`}></div>
           <p className="text-gray-400 text-sm mb-1">Total Balance</p>
           <div className="flex items-baseline gap-1 mb-6">
             <span className="text-3xl font-bold text-white">₦</span>
             <span className="text-4xl font-extrabold text-white tracking-tight">0.00</span>
           </div>
           <div className="grid grid-cols-2 gap-4">
-            <button onClick={handleProtectedAction} className="bg-stream-green text-white py-3 rounded-xl font-semibold text-sm shadow-lg shadow-emerald-900/20 active:scale-95 transition-transform">
+            <button onClick={handleProtectedAction} className={`${isBlue ? 'bg-sky-500 shadow-sky-900/20' : 'bg-stream-green shadow-emerald-900/20'} text-white py-3 rounded-xl font-semibold text-sm shadow-lg active:scale-95 transition-transform`}>
               Top Up
             </button>
             <button onClick={handleProtectedAction} className="bg-white/10 text-white py-3 rounded-xl font-semibold text-sm border border-white/10 hover:bg-white/20 active:scale-95 transition-transform">
@@ -78,7 +80,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ userData, onActivate }) =>
         <div>
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-white font-bold text-lg">Earning Hub</h2>
-            <span className="text-xs text-stream-green font-medium">View All</span>
+            <span className={`text-xs ${isBlue ? 'text-sky-400' : 'text-stream-green'} font-medium`}>View All</span>
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div onClick={handleProtectedAction} className="bg-[#0f172a] p-4 rounded-xl border border-white/5 relative group cursor-pointer overflow-hidden">
@@ -96,7 +98,6 @@ export const Dashboard: React.FC<DashboardProps> = ({ userData, onActivate }) =>
               </div>
               <h3 className="text-white font-semibold">TCN Salary</h3>
               <p className="text-gray-500 text-xs mt-1">TikTok Earnings</p>
-              {!isActivated && <div className="absolute top-2 right-2"><svg className="w-4 h-4 text-gray-600" fill="currentColor" viewBox="0 0 24 24"><path d="M12 17a2 2 0 100-4 2 2 0 000 4zm6-9h-1V6a5 5 0 00-10 0v2H6a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V10a2 2 0 00-2-2zM9 6a3 3 0 116 0v2H9V6z"/></svg></div>}
             </div>
 
             <div onClick={handleProtectedAction} className="bg-[#0f172a] p-4 rounded-xl border border-white/5 relative group cursor-pointer">
@@ -105,16 +106,14 @@ export const Dashboard: React.FC<DashboardProps> = ({ userData, onActivate }) =>
               </div>
               <h3 className="text-white font-semibold">Bazaar</h3>
               <p className="text-gray-500 text-xs mt-1">Sell Products</p>
-              {!isActivated && <div className="absolute top-2 right-2"><svg className="w-4 h-4 text-gray-600" fill="currentColor" viewBox="0 0 24 24"><path d="M12 17a2 2 0 100-4 2 2 0 000 4zm6-9h-1V6a5 5 0 00-10 0v2H6a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V10a2 2 0 00-2-2zM9 6a3 3 0 116 0v2H9V6z"/></svg></div>}
             </div>
 
             <div onClick={handleProtectedAction} className="bg-[#0f172a] p-4 rounded-xl border border-white/5 relative group cursor-pointer">
-              <div className="w-10 h-10 bg-blue-500/10 rounded-lg flex items-center justify-center mb-3 text-blue-400">
+              <div className={`w-10 h-10 ${isBlue ? 'bg-sky-500/10 text-sky-400' : 'bg-blue-500/10 text-blue-400'} rounded-lg flex items-center justify-center mb-3`}>
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 14l9-5-9-5-9 5 9 5z"/><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 14l9-5-9-5-9 5 9 5z"/></svg>
               </div>
               <h3 className="text-white font-semibold">Academy</h3>
               <p className="text-gray-500 text-xs mt-1">Learn Skills</p>
-              {!isActivated && <div className="absolute top-2 right-2"><svg className="w-4 h-4 text-gray-600" fill="currentColor" viewBox="0 0 24 24"><path d="M12 17a2 2 0 100-4 2 2 0 000 4zm6-9h-1V6a5 5 0 00-10 0v2H6a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V10a2 2 0 00-2-2zM9 6a3 3 0 116 0v2H9V6z"/></svg></div>}
             </div>
           </div>
         </div>
@@ -124,7 +123,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ userData, onActivate }) =>
            <h3 className="text-white font-semibold mb-4">Daily Activity</h3>
            <div className="flex items-center gap-4">
               <div className="w-16 h-16 rounded-full border-4 border-white/10 flex items-center justify-center relative">
-                 <div className="absolute inset-0 rounded-full border-4 border-stream-green border-t-transparent animate-spin" style={{ animationDuration: '3s' }}></div>
+                 <div className={`absolute inset-0 rounded-full border-4 ${isBlue ? 'border-sky-500' : 'border-stream-green'} border-t-transparent animate-spin`} style={{ animationDuration: '3s' }}></div>
                  <span className="text-white text-xs font-bold">0%</span>
               </div>
               <div>
@@ -135,55 +134,33 @@ export const Dashboard: React.FC<DashboardProps> = ({ userData, onActivate }) =>
         </div>
 
          {/* Referral Mock */}
-         <div onClick={handleProtectedAction} className="bg-gradient-to-r from-emerald-900/40 to-slate-900 p-4 rounded-xl border border-emerald-500/20 cursor-pointer">
+         <div onClick={handleProtectedAction} className={`bg-gradient-to-r ${isBlue ? 'from-sky-900/40' : 'from-emerald-900/40'} to-slate-900 p-4 rounded-xl border ${isBlue ? 'border-sky-500/20' : 'border-emerald-500/20'} cursor-pointer`}>
             <div className="flex justify-between items-center">
                 <div>
-                   <h3 className="text-emerald-400 font-bold text-sm">Invite Friends</h3>
+                   <h3 className={`${isBlue ? 'text-sky-400' : 'text-emerald-400'} font-bold text-sm`}>Invite Friends</h3>
                    <p className="text-gray-400 text-xs">Earn ₦5,000 per invite</p>
                 </div>
-                <div className="bg-emerald-500/20 p-2 rounded-lg">
-                    <svg className="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>
+                <div className={`${isBlue ? 'bg-sky-500/20' : 'bg-emerald-500/20'} p-2 rounded-lg`}>
+                    <svg className={`w-5 h-5 ${isBlue ? 'text-sky-400' : 'text-emerald-400'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>
                 </div>
             </div>
          </div>
       </main>
 
-      {/* Live Payout Ticker */}
-      <div className="fixed bottom-20 left-0 right-0 bg-black/80 backdrop-blur-md border-y border-white/5 py-2 overflow-hidden z-30">
-         <div className="whitespace-nowrap flex gap-8 animate-marquee text-xs text-gray-400">
-            <span>Chinedu A. withdrew ₦45,000 via Daily Flow</span>
-            <span>Sarah K. withdrew ₦15,500 via TCN</span>
-            <span>Emmanuel O. withdrew ₦18,000 via Bazaar</span>
-            <span>Zainab B. just activated Account</span>
-            <span>David I. withdrew ₦90,000 via Audio Collab</span>
-            <span>Ngozi E. withdrew ₦22,000 via Daily Flow</span>
-            <span>Tunde B. withdrew ₦15,000 via TCN</span>
-         </div>
-         <style>{`
-           @keyframes marquee {
-             0% { transform: translateX(100%); }
-             100% { transform: translateX(-100%); }
-           }
-           .animate-marquee {
-             animation: marquee 20s linear infinite;
-           }
-         `}</style>
-      </div>
-
       {/* Activation Modal */}
       {showActivateModal && (
         <div className="fixed inset-0 z-[70] flex items-center justify-center px-4">
            <div className="absolute inset-0 bg-black/80 backdrop-blur-md" onClick={() => setShowActivateModal(false)}></div>
-           <div className="bg-stream-card w-full max-w-sm rounded-2xl p-6 border border-emerald-500/30 shadow-2xl relative animate-in fade-in zoom-in duration-300">
+           <div className={`bg-stream-card w-full max-w-sm rounded-2xl p-6 border ${isBlue ? 'border-sky-500/30' : 'border-emerald-500/30'} shadow-2xl relative animate-in fade-in zoom-in duration-300`}>
               <button onClick={() => setShowActivateModal(false)} className="absolute top-4 right-4 text-gray-400 hover:text-white">✕</button>
-              <div className="w-16 h-16 bg-emerald-500/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-emerald-500/20">
-                 <svg className="w-8 h-8 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+              <div className={`w-16 h-16 ${isBlue ? 'bg-sky-500/10 border-sky-500/20' : 'bg-emerald-500/10 border-emerald-500/20'} rounded-full flex items-center justify-center mx-auto mb-4 border`}>
+                 <svg className={`w-8 h-8 ${isBlue ? 'text-sky-500' : 'text-emerald-500'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
               </div>
               <h3 className="text-xl font-bold text-white text-center mb-2">Activate Lifetime Access</h3>
               <p className="text-gray-400 text-center text-sm mb-6">
                 You are currently in Demo Mode. To unlock earning features, withdraw funds, and access the Bazaar, please complete your one-time activation.
               </p>
-              <Button onClick={onActivate} fullWidth className="py-3 shadow-lg shadow-emerald-500/20">
+              <Button onClick={onActivate} fullWidth className={`py-3 shadow-lg ${isBlue ? 'shadow-sky-500/20' : 'shadow-emerald-500/20'}`}>
                 Activate Now - ₦12,000
               </Button>
            </div>

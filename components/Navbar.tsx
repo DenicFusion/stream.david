@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Button } from './Button';
 import { ViewState } from '../types';
+import { THEME_COLOR } from '../config';
 
 interface NavbarProps {
   onNavigate: (view: ViewState) => void;
@@ -9,8 +10,9 @@ interface NavbarProps {
 
 export const Navbar: React.FC<NavbarProps> = ({ onNavigate, currentView }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const isBlue = THEME_COLOR === 'BLUE';
 
-  // Logo Component - Using logo.jpg as requested
+  // Logo Component
   const Logo = () => (
     <div className="flex items-center gap-3">
        <img 
@@ -27,7 +29,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onNavigate, currentView }) => {
       onNavigate('HOME');
       setTimeout(() => {
         document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
-      }, 100); // Wait for transition
+      }, 100);
     } else {
       document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
     }
@@ -44,11 +46,14 @@ export const Navbar: React.FC<NavbarProps> = ({ onNavigate, currentView }) => {
           
           <div className="hidden md:block">
             <div className="ml-10 flex items-baseline space-x-8">
-              <button onClick={() => onNavigate('HOME')} className="text-gray-300 hover:text-stream-green px-3 py-2 rounded-md text-sm font-medium transition-colors">Home</button>
-              <button onClick={() => handleScroll('features')} className="text-gray-300 hover:text-stream-green px-3 py-2 rounded-md text-sm font-medium transition-colors">Features</button>
-              <button onClick={() => handleScroll('faq')} className="text-gray-300 hover:text-stream-green px-3 py-2 rounded-md text-sm font-medium transition-colors">FAQs</button>
+              <button onClick={() => onNavigate('HOME')} className={`text-gray-300 hover:text-stream-green px-3 py-2 rounded-md text-sm font-medium transition-colors`}>Home</button>
+              <button onClick={() => handleScroll('features')} className={`text-gray-300 hover:text-stream-green px-3 py-2 rounded-md text-sm font-medium transition-colors`}>Features</button>
+              <button onClick={() => handleScroll('faq')} className={`text-gray-300 hover:text-stream-green px-3 py-2 rounded-md text-sm font-medium transition-colors`}>FAQs</button>
               {currentView === 'HOME' && (
-                <Button onClick={() => onNavigate('SIGNUP')} variant="primary" className="ml-4">
+                <Button 
+                  onClick={() => onNavigate('SIGNUP')} 
+                  className={`ml-4 !rounded-full !px-8 !py-2.5 !bg-gradient-to-r ${isBlue ? 'from-sky-500 to-blue-600' : 'from-stream-green to-emerald-600'} hover:scale-105 transition-transform`}
+                >
                   Get Started
                 </Button>
               )}
@@ -58,7 +63,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onNavigate, currentView }) => {
           <div className="-mr-2 flex md:hidden">
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none"
+              className={`inline-flex items-center justify-center p-2 rounded-md ${isOpen ? (isBlue ? 'text-sky-400' : 'text-stream-green') : 'text-gray-400'} hover:text-white hover:bg-white/5 focus:outline-none transition-colors`}
             >
               <span className="sr-only">Open main menu</span>
               {isOpen ? (
@@ -76,14 +81,35 @@ export const Navbar: React.FC<NavbarProps> = ({ onNavigate, currentView }) => {
       </div>
 
       {isOpen && (
-        <div className="md:hidden bg-stream-card border-b border-white/10">
+        <div className="md:hidden bg-stream-card border-b border-white/10 animate-in slide-in-from-top duration-300">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-            <button onClick={() => { onNavigate('HOME'); setIsOpen(false); }} className="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium w-full text-left">Home</button>
-            <button onClick={() => handleScroll('features')} className="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium w-full text-left">Features</button>
-             <button onClick={() => handleScroll('faq')} className="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium w-full text-left">FAQs</button>
+            <button 
+              onClick={() => { onNavigate('HOME'); setIsOpen(false); }} 
+              className={`text-gray-300 hover:${isBlue ? 'text-sky-400 bg-sky-400/10' : 'text-stream-green bg-stream-green/10'} block px-3 py-3 rounded-xl text-base font-semibold w-full text-left transition-all`}
+            >
+              Home
+            </button>
+            <button 
+              onClick={() => handleScroll('features')} 
+              className={`text-gray-300 hover:${isBlue ? 'text-sky-400 bg-sky-400/10' : 'text-stream-green bg-stream-green/10'} block px-3 py-3 rounded-xl text-base font-semibold w-full text-left transition-all`}
+            >
+              Features
+            </button>
+             <button 
+              onClick={() => handleScroll('faq')} 
+              className={`text-gray-300 hover:${isBlue ? 'text-sky-400 bg-sky-400/10' : 'text-stream-green bg-stream-green/10'} block px-3 py-3 rounded-xl text-base font-semibold w-full text-left transition-all`}
+            >
+              FAQs
+            </button>
             {currentView === 'HOME' && (
-              <div className="pt-4">
-                <Button onClick={() => { onNavigate('SIGNUP'); setIsOpen(false); }} fullWidth>Sign Up</Button>
+              <div className="px-3 pt-4 pb-2">
+                <Button 
+                  onClick={() => { onNavigate('SIGNUP'); setIsOpen(false); }} 
+                  fullWidth 
+                  className={`!rounded-xl !py-4 !text-lg !bg-gradient-to-r ${isBlue ? 'from-sky-500 to-blue-600' : 'from-stream-green to-emerald-600'} shadow-xl`}
+                >
+                  Sign Up Now
+                </Button>
               </div>
             )}
           </div>

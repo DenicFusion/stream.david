@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { MOCK_NAMES } from '../config';
+import { MOCK_NAMES, THEME_COLOR } from '../config';
 
 interface NotificationToastProps {
   type: 'REGISTER' | 'ACTIVATE';
@@ -8,19 +8,17 @@ interface NotificationToastProps {
 export const NotificationToast: React.FC<NotificationToastProps> = ({ type }) => {
   const [visible, setVisible] = useState(false);
   const [data, setData] = useState({ name: '', time: '' });
+  const isBlue = THEME_COLOR === 'BLUE';
 
   useEffect(() => {
-    // Timing configuration (ms)
     const INITIAL_DELAY = 2000;
-    const SHOW_DURATION = 4000; // Time the notification stays on screen
-    const GAP_DURATION = 3000;  // Time to wait between notifications
+    const SHOW_DURATION = 4000;
+    const GAP_DURATION = 3000;
 
     let timeoutId: ReturnType<typeof setTimeout>;
 
     const showNext = () => {
-      // Pick random data
       const randomName = MOCK_NAMES[Math.floor(Math.random() * MOCK_NAMES.length)];
-      // Generate realistic time variation
       const times = ['Just now', '1m ago', 'Just now', '2m ago', 'Just now'];
       const randomTime = times[Math.floor(Math.random() * times.length)];
 
@@ -29,33 +27,28 @@ export const NotificationToast: React.FC<NotificationToastProps> = ({ type }) =>
         time: randomTime
       });
 
-      // Show
       setVisible(true);
 
-      // Schedule Hide
       timeoutId = setTimeout(() => {
         setVisible(false);
-        
-        // Schedule Next Show after gap
         timeoutId = setTimeout(showNext, GAP_DURATION);
       }, SHOW_DURATION);
     };
 
-    // Start the cycle
     timeoutId = setTimeout(showNext, INITIAL_DELAY);
-
     return () => clearTimeout(timeoutId);
   }, []);
 
-  // Animation classes
-  // We use keyframes defined in tailwind.config (index.html) or fallback to simple transitions
   const animationClass = visible 
     ? 'animate-slideDown opacity-100 translate-y-0' 
     : 'animate-slideUp opacity-0 -translate-y-[150%]';
 
-  // Avatar Letter
   const avatarLetter = data.name.charAt(0).toUpperCase();
-  const avatarBg = type === 'ACTIVATE' ? 'bg-emerald-500' : 'bg-blue-600';
+  
+  // Color selection based on theme
+  const activateColor = isBlue ? 'bg-indigo-600' : 'bg-emerald-500';
+  const registerColor = isBlue ? 'bg-sky-600' : 'bg-blue-600';
+  const avatarBg = type === 'ACTIVATE' ? activateColor : registerColor;
 
   return (
     <div className={`fixed top-4 left-1/2 z-[60] w-[90%] max-w-[360px] transform -translate-x-1/2 ${animationClass}`}>

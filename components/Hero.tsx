@@ -1,7 +1,10 @@
 import React from 'react';
 import { Button } from './Button';
+import { THEME_COLOR } from '../config';
 
 export const Hero: React.FC<{ onSignup: () => void }> = ({ onSignup }) => {
+  const isBlue = THEME_COLOR === 'BLUE';
+
   return (
     <div className="relative overflow-hidden bg-stream-dark pt-24 pb-20 sm:pb-32">
       <div className="absolute inset-0 z-0">
@@ -16,13 +19,13 @@ export const Hero: React.FC<{ onSignup: () => void }> = ({ onSignup }) => {
       
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center text-center">
         <div className="inline-flex items-center px-4 py-2 rounded-full bg-white/5 border border-white/10 mb-8 backdrop-blur-sm">
-          <span className="w-2 h-2 rounded-full bg-stream-green mr-3 animate-pulse"></span>
+          <span className={`w-2 h-2 rounded-full ${isBlue ? 'bg-sky-400' : 'bg-stream-green'} mr-3 animate-pulse`}></span>
           <span className="text-gray-300 text-sm font-medium tracking-wide uppercase">The Wait Is Over</span>
         </div>
         
         <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold text-white tracking-tight mb-8 leading-tight">
           Life in Motion. <br />
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-stream-green to-emerald-400">
+          <span className={`text-transparent bg-clip-text bg-gradient-to-r ${isBlue ? 'from-sky-400 to-blue-500' : 'from-stream-green to-emerald-400'}`}>
             Income in Continuous Flow.
           </span>
         </h1>
@@ -41,7 +44,7 @@ export const Hero: React.FC<{ onSignup: () => void }> = ({ onSignup }) => {
             className="group relative !rounded-full !px-10 !py-4 text-lg overflow-hidden !bg-transparent !shadow-none ring-1 ring-white/10 w-auto min-w-[200px]"
           >
             {/* Gradient Background */}
-            <div className="absolute inset-0 bg-gradient-to-r from-stream-green to-emerald-600 transition-all duration-300 group-hover:scale-105"></div>
+            <div className={`absolute inset-0 bg-gradient-to-r ${isBlue ? 'from-sky-500 to-blue-600' : 'from-stream-green to-emerald-600'} transition-all duration-300 group-hover:scale-105`}></div>
             
             {/* Continuous Shimmer Effect */}
             <div className="absolute inset-0 -translate-x-full animate-[shimmer_2s_infinite] bg-gradient-to-r from-transparent via-white/25 to-transparent z-10"></div>
@@ -53,7 +56,7 @@ export const Hero: React.FC<{ onSignup: () => void }> = ({ onSignup }) => {
             </span>
             
             {/* Glow on hover */}
-            <div className="absolute inset-0 opacity-0 group-hover:opacity-50 transition-opacity duration-300 bg-emerald-400 blur-xl -z-10"></div>
+            <div className={`absolute inset-0 opacity-0 group-hover:opacity-50 transition-opacity duration-300 ${isBlue ? 'bg-sky-400' : 'bg-emerald-400'} blur-xl -z-10`}></div>
           </Button>
 
           {/* Learn More - Dynamic Glassmorphism */}
@@ -69,8 +72,8 @@ export const Hero: React.FC<{ onSignup: () => void }> = ({ onSignup }) => {
         <div className="mt-16 grid grid-cols-2 gap-8 md:grid-cols-4 w-full max-w-5xl border-t border-white/5 pt-12">
           <div className="text-center group">
             <div className="flex justify-center mb-3">
-              <div className="p-3 bg-white/5 rounded-2xl group-hover:bg-stream-green/20 transition-colors duration-300">
-                <svg className="w-8 h-8 text-stream-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className={`p-3 bg-white/5 rounded-2xl group-hover:${isBlue ? 'bg-sky-500/20' : 'bg-stream-green/20'} transition-colors duration-300`}>
+                <svg className={`w-8 h-8 ${isBlue ? 'text-sky-400' : 'text-stream-green'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
@@ -81,8 +84,8 @@ export const Hero: React.FC<{ onSignup: () => void }> = ({ onSignup }) => {
           
           <div className="text-center group">
             <div className="flex justify-center mb-3">
-              <div className="p-3 bg-white/5 rounded-2xl group-hover:bg-stream-green/20 transition-colors duration-300">
-                <svg className="w-8 h-8 text-stream-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className={`p-3 bg-white/5 rounded-2xl group-hover:${isBlue ? 'bg-sky-500/20' : 'bg-stream-green/20'} transition-colors duration-300`}>
+                <svg className={`w-8 h-8 ${isBlue ? 'text-sky-400' : 'text-stream-green'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
@@ -93,8 +96,8 @@ export const Hero: React.FC<{ onSignup: () => void }> = ({ onSignup }) => {
 
           <div className="text-center group">
             <div className="flex justify-center mb-3">
-              <div className="p-3 bg-white/5 rounded-2xl group-hover:bg-stream-green/20 transition-colors duration-300">
-                <svg className="w-8 h-8 text-stream-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className={`p-3 bg-white/5 rounded-2xl group-hover:${isBlue ? 'bg-sky-500/20' : 'bg-stream-green/20'} transition-colors duration-300`}>
+                <svg className={`w-8 h-8 ${isBlue ? 'text-sky-400' : 'text-stream-green'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
@@ -105,8 +108,8 @@ export const Hero: React.FC<{ onSignup: () => void }> = ({ onSignup }) => {
 
           <div className="text-center group">
              <div className="flex justify-center mb-3">
-              <div className="p-3 bg-white/5 rounded-2xl group-hover:bg-stream-green/20 transition-colors duration-300">
-                <svg className="w-8 h-8 text-stream-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className={`p-3 bg-white/5 rounded-2xl group-hover:${isBlue ? 'bg-sky-500/20' : 'bg-stream-green/20'} transition-colors duration-300`}>
+                <svg className={`w-8 h-8 ${isBlue ? 'text-sky-400' : 'text-stream-green'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                 </svg>
               </div>

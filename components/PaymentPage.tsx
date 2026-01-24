@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { Button } from './Button';
 import { UserData } from '../types';
-import { PAYMENT_MODE, OPAY_PUBLIC_KEY, OPAY_MERCHANT_ID, OPAY_API_URL, BANK_DETAILS } from '../config';
+import { PAYMENT_MODE, OPAY_PUBLIC_KEY, OPAY_MERCHANT_ID, OPAY_API_URL, BANK_DETAILS, THEME_COLOR } from '../config';
 import { CustomAlert } from './CustomAlert';
 
 interface PaymentPageProps {
   userData: UserData;
-  onSuccess: (reference: string) => void;
+  onSuccess: (reference: string, bankInfo?: string) => void;
   onBack: () => void;
 }
 
@@ -25,17 +25,19 @@ export const PaymentPage: React.FC<PaymentPageProps> = ({ userData, onSuccess, o
     PAYMENT_MODE === 'TRUE' ? 'CARD' : 'TRANSFER'
   );
   
+  const [selectedBankIndex, setSelectedBankIndex] = useState(0);
   const [copied, setCopied] = useState<string | null>(null);
   const [loadingOpay, setLoadingOpay] = useState(false);
   const [alertState, setAlertState] = useState<{show: boolean, title: string, message: string, type: 'info'|'error'|'success'}>({show: false, title:'', message:'', type:'info'});
 
-  const reference = "STREAM-" + Math.floor((Math.random() * 1000000000) + 1);
+  const isBlue = THEME_COLOR === 'BLUE';
 
   const showAlert = (title: string, message: string, type: 'info'|'error'|'success' = 'info') => {
       setAlertState({ show: true, title, message, type });
   };
 
   const handlePaystack = () => {
+    const reference = "STREAM-" + Math.floor((Math.random() * 1000000000) + 1);
     if (window.PaystackPop) {
       const handler = window.PaystackPop.setup({
         key: LIVE_KEY,
@@ -67,6 +69,7 @@ export const PaymentPage: React.FC<PaymentPageProps> = ({ userData, onSuccess, o
 
   const handleOpayCheckout = async () => {
       setLoadingOpay(true);
+      const reference = "STREAM-" + Math.floor((Math.random() * 1000000000) + 1);
       try {
         const payload = {
           country: "NG",
@@ -114,7 +117,10 @@ export const PaymentPage: React.FC<PaymentPageProps> = ({ userData, onSuccess, o
   };
 
   const handleTransferDone = () => {
-      onSuccess(reference);
+      const bank = BANK_DETAILS[selectedBankIndex];
+      const bankInfo = `${bank.bankName} (${bank.accountNumber})`;
+      // For transfers, we send empty reference and full bank info
+      onSuccess('', bankInfo);
   };
 
   const showPaystack = PAYMENT_MODE === 'TRUE';
@@ -132,15 +138,15 @@ export const PaymentPage: React.FC<PaymentPageProps> = ({ userData, onSuccess, o
       />
       
       <div className="max-w-lg w-full bg-white text-gray-800 rounded-2xl shadow-2xl overflow-hidden">
-        <div className="bg-emerald-600 p-6 text-center">
+        <div className="bg-stream-green p-6 text-center">
             <h2 className="text-2xl font-bold text-white">Complete Activation</h2>
-            <p className="text-emerald-100">Unlock Lifetime Access</p>
+            <p className="text-white/80">Unlock Lifetime Access</p>
         </div>
         
         <div className="p-6">
             <div className="flex justify-between items-center mb-6 bg-gray-50 p-4 rounded-lg">
                 <span className="text-gray-500 font-medium">Amount to Pay</span>
-                <span className="text-2xl font-extrabold text-emerald-600">₦{AMOUNT_NAIRA.toLocaleString()}</span>
+                <span className="text-2xl font-extrabold text-stream-green">₦{AMOUNT_NAIRA.toLocaleString()}</span>
             </div>
 
             {/* Method Toggles */}
@@ -148,7 +154,7 @@ export const PaymentPage: React.FC<PaymentPageProps> = ({ userData, onSuccess, o
                 {showPaystack && (
                     <button 
                         onClick={() => setActiveTab('CARD')}
-                        className={`flex-1 py-2 text-sm font-bold rounded-md transition-all ${activeTab === 'CARD' ? 'bg-white shadow-sm text-emerald-600' : 'text-gray-500 hover:text-gray-700'}`}
+                        className={`flex-1 py-2 text-sm font-bold rounded-md transition-all ${activeTab === 'CARD' ? 'bg-white shadow-sm text-stream-green' : 'text-gray-500 hover:text-gray-700'}`}
                     >
                         Card / Paystack
                     </button>
@@ -156,7 +162,7 @@ export const PaymentPage: React.FC<PaymentPageProps> = ({ userData, onSuccess, o
                 {showTransfer && (
                     <button 
                         onClick={() => setActiveTab('TRANSFER')}
-                        className={`flex-1 py-2 text-sm font-bold rounded-md transition-all ${activeTab === 'TRANSFER' ? 'bg-white shadow-sm text-emerald-600' : 'text-gray-500 hover:text-gray-700'}`}
+                        className={`flex-1 py-2 text-sm font-bold rounded-md transition-all ${activeTab === 'TRANSFER' ? 'bg-white shadow-sm text-stream-green' : 'text-gray-500 hover:text-gray-700'}`}
                     >
                         Bank Transfer
                     </button>
@@ -164,7 +170,7 @@ export const PaymentPage: React.FC<PaymentPageProps> = ({ userData, onSuccess, o
                 {showOpay && (
                     <button 
                         onClick={() => setActiveTab('OPAY')}
-                        className={`flex-1 py-2 text-sm font-bold rounded-md transition-all ${activeTab === 'OPAY' ? 'bg-white shadow-sm text-emerald-600' : 'text-gray-500 hover:text-gray-700'}`}
+                        className={`flex-1 py-2 text-sm font-bold rounded-md transition-all ${activeTab === 'OPAY' ? 'bg-white shadow-sm text-stream-green' : 'text-gray-500 hover:text-gray-700'}`}
                     >
                         Opay
                     </button>
@@ -177,7 +183,7 @@ export const PaymentPage: React.FC<PaymentPageProps> = ({ userData, onSuccess, o
                     <p className="text-sm text-center text-gray-500">
                         Secure instant payment via Debit Card, USSD, or Bank Transfer via Paystack.
                     </p>
-                    <Button onClick={handlePaystack} fullWidth className="bg-emerald-600 hover:bg-emerald-700 text-white py-4 text-lg">
+                    <Button onClick={handlePaystack} fullWidth className="py-4 text-lg">
                         Pay ₦{AMOUNT_NAIRA.toLocaleString()} Now
                     </Button>
                 </div>
@@ -186,45 +192,63 @@ export const PaymentPage: React.FC<PaymentPageProps> = ({ userData, onSuccess, o
             {/* TRANSFER VIEW */}
             {activeTab === 'TRANSFER' && showTransfer && (
                 <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4">
-                    <p className="text-sm text-center text-gray-500 mb-4">
-                        Make a transfer to the account below.
+                    <p className="text-sm text-center text-gray-500 mb-2">
+                        Click on a bank account to select it, then make the transfer.
                     </p>
-                    {BANK_DETAILS.map((bank, index) => (
-                        <div key={index} className="bg-emerald-50 border border-emerald-100 p-4 rounded-xl relative">
-                            <div className="mb-3">
-                                <p className="text-xs text-gray-500 uppercase">Bank Name</p>
-                                <p className="font-bold text-gray-800">{bank.bankName}</p>
-                            </div>
-                            <div className="mb-3">
-                                <p className="text-xs text-gray-500 uppercase">Account Number</p>
-                                <div className="flex items-center gap-2">
-                                    <p className="font-mono text-xl font-bold text-emerald-700 tracking-wider">{bank.accountNumber}</p>
-                                    <button 
-                                        onClick={() => copyToClipboard(bank.accountNumber, `acc-${index}`)}
-                                        className="p-1.5 bg-white rounded-md shadow-sm border border-gray-200 hover:bg-gray-50 transition-colors"
-                                    >
-                                        {copied === `acc-${index}` ? (
-                                            <svg className="w-4 h-4 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" /></svg>
-                                        ) : (
-                                            <svg className="w-4 h-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" /></svg>
-                                        )}
-                                    </button>
+                    <div className="space-y-4">
+                        {BANK_DETAILS.map((bank, index) => (
+                            <div 
+                                key={index} 
+                                onClick={() => setSelectedBankIndex(index)}
+                                className={`p-4 rounded-xl relative cursor-pointer border-2 transition-all ${
+                                    selectedBankIndex === index 
+                                    ? `border-stream-green bg-stream-green/5 shadow-md` 
+                                    : 'border-gray-200 bg-gray-50 hover:border-gray-300'
+                                }`}
+                            >
+                                {selectedBankIndex === index && (
+                                    <div className="absolute top-3 right-3">
+                                        <div className="bg-stream-green text-white text-[10px] font-bold uppercase px-2 py-0.5 rounded-full flex items-center gap-1">
+                                            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" /></svg>
+                                            Selected
+                                        </div>
+                                    </div>
+                                )}
+                                <div className="mb-2">
+                                    <p className="text-xs text-gray-500 uppercase tracking-tight">Bank Name</p>
+                                    <p className="font-bold text-gray-800">{bank.bankName}</p>
+                                </div>
+                                <div className="mb-2">
+                                    <p className="text-xs text-gray-500 uppercase tracking-tight">Account Number</p>
+                                    <div className="flex items-center gap-2">
+                                        <p className={`font-mono text-xl font-bold ${selectedBankIndex === index ? 'text-stream-green' : 'text-gray-700'} tracking-wider`}>{bank.accountNumber}</p>
+                                        <button 
+                                            onClick={(e) => { e.stopPropagation(); copyToClipboard(bank.accountNumber, `acc-${index}`); }}
+                                            className="p-1.5 bg-white rounded-md shadow-sm border border-gray-200 hover:bg-gray-50 transition-colors"
+                                        >
+                                            {copied === `acc-${index}` ? (
+                                                <svg className="w-4 h-4 text-stream-green" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" /></svg>
+                                            ) : (
+                                                <svg className="w-4 h-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" /></svg>
+                                            )}
+                                        </button>
+                                    </div>
+                                </div>
+                                <div>
+                                    <p className="text-xs text-gray-500 uppercase tracking-tight">Account Name</p>
+                                    <p className="font-medium text-gray-800">{bank.accountName}</p>
                                 </div>
                             </div>
-                            <div>
-                                <p className="text-xs text-gray-500 uppercase">Account Name</p>
-                                <p className="font-medium text-gray-800">{bank.accountName}</p>
-                            </div>
-                        </div>
-                    ))}
+                        ))}
+                    </div>
                     
                     <div className="bg-yellow-50 border-l-4 border-yellow-400 p-3">
-                         <p className="text-xs text-yellow-800">
-                             <strong>Important:</strong> After transfer, click the button below to generate your reference ID and proceed to verification.
+                         <p className="text-xs text-yellow-800 leading-relaxed">
+                             <strong>Notice:</strong> Please confirm you have sent ₦{AMOUNT_NAIRA.toLocaleString()} to <strong>{BANK_DETAILS[selectedBankIndex].bankName}</strong> before proceeding.
                          </p>
                     </div>
 
-                    <Button onClick={handleTransferDone} fullWidth className="bg-emerald-600 hover:bg-emerald-700 text-white py-4 text-lg">
+                    <Button onClick={handleTransferDone} fullWidth className="py-4 text-lg">
                         I Have Made The Transfer
                     </Button>
                 </div>
@@ -234,7 +258,7 @@ export const PaymentPage: React.FC<PaymentPageProps> = ({ userData, onSuccess, o
             {activeTab === 'OPAY' && showOpay && (
                 <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4">
                      <div className="bg-blue-50 p-4 rounded-xl border border-blue-100 flex flex-col items-center justify-center text-center">
-                         <div className="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold text-xl mb-4 shadow-lg shadow-blue-500/30">
+                         <div className={`w-16 h-16 ${isBlue ? 'bg-sky-500' : 'bg-blue-500'} rounded-full flex items-center justify-center text-white font-bold text-xl mb-4 shadow-lg`}>
                              OPay
                          </div>
                          <h3 className="text-gray-800 font-bold mb-2">Pay with Opay Wallet</h3>
@@ -246,7 +270,7 @@ export const PaymentPage: React.FC<PaymentPageProps> = ({ userData, onSuccess, o
                         onClick={handleOpayCheckout} 
                         fullWidth 
                         disabled={loadingOpay}
-                        className="bg-blue-500 hover:bg-blue-600 text-white py-4 text-lg shadow-lg shadow-blue-500/20 disabled:opacity-70 disabled:cursor-not-allowed"
+                        className={`py-4 text-lg !bg-blue-500 hover:!bg-blue-600 disabled:opacity-70 disabled:cursor-not-allowed`}
                      >
                         {loadingOpay ? 'Initializing...' : 'Pay with Opay'}
                     </Button>
