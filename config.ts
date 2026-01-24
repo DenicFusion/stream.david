@@ -29,7 +29,7 @@ export const BANK_DETAILS = [
   },
   // Add second account here if needed for dual accounts
   {
-    bankName: "Moniepoint MFB", 
+    bankName: "Opay Bank", 
     accountNumber: "8032842129",
     accountName: "Chimezie David Igwe"
   }
