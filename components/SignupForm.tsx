@@ -77,23 +77,23 @@ export const SignupForm: React.FC<SignupFormProps> = ({ onSubmit, onBack, initia
     }
   };
 
-  // Perfect "Hide and Seek" Toggle - matches the screenshot aesthetic
+  // Fixed Hide and Seek Toggle
   const PasswordToggle = () => (
     <button
       type="button"
       onClick={() => setShowPassword(!showPassword)}
-      className="absolute right-0 top-0 h-full w-14 flex items-center justify-center text-gray-500 hover:text-white transition-all cursor-pointer z-20 group"
+      className="absolute right-0 top-1/2 -translate-y-1/2 h-full w-14 flex items-center justify-center text-gray-500 hover:text-white transition-all cursor-pointer z-20 group"
       aria-label={showPassword ? "Hide password" : "Show password"}
     >
-      <div className={`p-2 rounded-full transition-colors group-hover:bg-white/5`}>
+      <div className="p-2 rounded-lg transition-colors group-hover:bg-white/5">
         {showPassword ? (
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268-2.943-9.543-7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268-2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
           </svg>
         ) : (
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268-2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268-2.943-9.543-7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
           </svg>
         )}
       </div>
@@ -129,9 +129,6 @@ export const SignupForm: React.FC<SignupFormProps> = ({ onSubmit, onBack, initia
             <div className="flex flex-col items-center text-center mb-10">
                 <div className={`w-24 h-24 rounded-full p-1.5 border-2 ${isBlue ? 'border-sky-500/20' : 'border-emerald-500/20'} mb-5 bg-[#0f172a] shadow-inner relative`}>
                     <img className="w-full h-full rounded-full object-cover" src="logo.jpg" alt="Stream Africa" />
-                    <div className={`absolute -bottom-1 -right-1 w-6 h-6 rounded-full ${isBlue ? 'bg-sky-500' : 'bg-stream-green'} border-4 border-[#1e293b] flex items-center justify-center`}>
-                      <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
-                    </div>
                 </div>
                 <h2 className="text-4xl font-extrabold text-white tracking-tight">
                     {isLoginMode ? 'Welcome Back' : 'Join Stream'}
@@ -150,7 +147,7 @@ export const SignupForm: React.FC<SignupFormProps> = ({ onSubmit, onBack, initia
                         name="name"
                         type="text"
                         required
-                        className={`w-full h-14 px-6 bg-black/25 border border-white/5 rounded-2xl text-white placeholder-gray-600 focus:outline-none focus:border-${isBlue ? 'sky-500' : 'stream-green'} focus:ring-1 focus:ring-${isBlue ? 'sky-500' : 'stream-green'} transition-all`}
+                        className="w-full h-14 px-6 bg-black/25 border border-white/5 rounded-2xl text-white placeholder-gray-600 focus:outline-none focus:border-stream-green focus:ring-1 focus:ring-stream-green transition-all"
                         placeholder="John Doe"
                         value={formData.name}
                         onChange={handleChange}
@@ -164,7 +161,7 @@ export const SignupForm: React.FC<SignupFormProps> = ({ onSubmit, onBack, initia
                     name="username"
                     type="text"
                     required
-                    className={`w-full h-14 px-6 bg-black/25 border border-white/5 rounded-2xl text-white placeholder-gray-600 focus:outline-none focus:border-${isBlue ? 'sky-500' : 'stream-green'} focus:ring-1 focus:ring-${isBlue ? 'sky-500' : 'stream-green'} transition-all`}
+                    className="w-full h-14 px-6 bg-black/25 border border-white/5 rounded-2xl text-white placeholder-gray-600 focus:outline-none focus:border-stream-green focus:ring-1 focus:ring-stream-green transition-all"
                     placeholder="streamer123"
                     value={formData.username}
                     onChange={handleChange}
@@ -179,7 +176,7 @@ export const SignupForm: React.FC<SignupFormProps> = ({ onSubmit, onBack, initia
                         name="email"
                         type="email"
                         required
-                        className={`w-full h-14 px-6 bg-black/25 border border-white/5 rounded-2xl text-white placeholder-gray-600 focus:outline-none focus:border-${isBlue ? 'sky-500' : 'stream-green'} focus:ring-1 focus:ring-${isBlue ? 'sky-500' : 'stream-green'} transition-all`}
+                        className="w-full h-14 px-6 bg-black/25 border border-white/5 rounded-2xl text-white placeholder-gray-600 focus:outline-none focus:border-stream-green focus:ring-1 focus:ring-stream-green transition-all"
                         placeholder="you@example.com"
                         value={formData.email}
                         onChange={handleChange}
@@ -192,7 +189,7 @@ export const SignupForm: React.FC<SignupFormProps> = ({ onSubmit, onBack, initia
                         name="phone"
                         type="tel"
                         required
-                        className={`w-full h-14 px-6 bg-black/25 border border-white/5 rounded-2xl text-white placeholder-gray-600 focus:outline-none focus:border-${isBlue ? 'sky-500' : 'stream-green'} focus:ring-1 focus:ring-${isBlue ? 'sky-500' : 'stream-green'} transition-all`}
+                        className="w-full h-14 px-6 bg-black/25 border border-white/5 rounded-2xl text-white placeholder-gray-600 focus:outline-none focus:border-stream-green focus:ring-1 focus:ring-stream-green transition-all"
                         placeholder="+234..."
                         value={formData.phone}
                         onChange={handleChange}
@@ -208,7 +205,7 @@ export const SignupForm: React.FC<SignupFormProps> = ({ onSubmit, onBack, initia
                         name="password"
                         type={showPassword ? "text" : "password"}
                         required
-                        className={`w-full h-14 px-6 bg-black/25 border border-white/5 rounded-2xl text-white placeholder-gray-600 focus:outline-none focus:border-${isBlue ? 'sky-500' : 'stream-green'} focus:ring-1 focus:ring-${isBlue ? 'sky-500' : 'stream-green'} transition-all pr-14`}
+                        className="w-full h-14 px-6 bg-black/25 border border-white/5 rounded-2xl text-white placeholder-gray-600 focus:outline-none focus:border-stream-green focus:ring-1 focus:ring-stream-green transition-all pr-14"
                         placeholder="••••••••"
                         value={formData.password}
                         onChange={handleChange}
@@ -217,7 +214,7 @@ export const SignupForm: React.FC<SignupFormProps> = ({ onSubmit, onBack, initia
                 </div>
                 {isLoginMode && (
                   <div className="flex justify-end pr-1">
-                      <button type="button" onClick={() => showAlert("Info", "Contact support to reset password.", "info")} className={`text-[10px] font-bold ${isBlue ? 'text-sky-400' : 'text-emerald-400'} hover:opacity-80 transition-opacity uppercase tracking-widest`}>Forgot Password?</button>
+                      <button type="button" onClick={() => showAlert("Info", "Contact support to reset password.", "info")} className="text-[10px] font-bold text-emerald-400 hover:opacity-80 transition-opacity uppercase tracking-widest">Forgot Password?</button>
                   </div>
                 )}
             </div>
@@ -226,11 +223,7 @@ export const SignupForm: React.FC<SignupFormProps> = ({ onSubmit, onBack, initia
                 <Button 
                     type="submit" 
                     fullWidth 
-                    className={`h-16 text-lg font-bold !rounded-[1.25rem] border-0 !shadow-[0_12px_40px_rgba(0,0,0,0.5)] ${
-                        isBlue 
-                        ? '!bg-gradient-to-r !from-sky-500 !to-blue-600 hover:!from-sky-400 hover:!to-blue-500 !shadow-sky-900/40' 
-                        : '!bg-gradient-to-r !from-stream-green !to-emerald-600 hover:!from-emerald-400 hover:!to-green-500 !shadow-emerald-900/40'
-                    } transition-all duration-300 transform active:scale-[0.97]`}
+                    className="h-16 text-lg font-bold !rounded-[1.25rem] border-0 !shadow-[0_12px_40px_rgba(0,0,0,0.5)] !bg-gradient-to-r !from-emerald-500 !to-green-600 hover:!from-emerald-400 hover:!to-green-500 !shadow-emerald-900/40 transition-all duration-300 transform active:scale-[0.97]"
                 >
                 {isLoginMode ? 'Sign In' : 'Create Account'}
                 </Button>
@@ -245,7 +238,7 @@ export const SignupForm: React.FC<SignupFormProps> = ({ onSubmit, onBack, initia
                             setIsLoginMode(!isLoginMode);
                             setShowPassword(false);
                         }}
-                        className={`ml-2 text-white font-bold hover:${isBlue ? 'text-sky-400' : 'text-emerald-400'} transition-all underline underline-offset-4 decoration-white/20`}
+                        className="ml-2 text-white font-bold hover:text-emerald-400 transition-all underline underline-offset-4 decoration-white/20"
                     >
                         {isLoginMode ? 'Sign Up' : 'Login'}
                     </button>
