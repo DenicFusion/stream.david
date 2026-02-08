@@ -18,7 +18,7 @@ export const SUPPORT_CONTACT = {
   showOnHome: true, // Show FAB on homepage
   method: 'TELEGRAM' as 'WHATSAPP' | 'TELEGRAM', // Toggle between 'WHATSAPP' and 'TELEGRAM'
   whatsappNumber: "2349012345678", 
-  telegramUrl: "https://t.me/Ama0_7"
+  telegramUrl: "https://t.me/stream_african"
 };
 
 // Opay Configuration
@@ -35,14 +35,14 @@ export const OPAY_API_URL = "https://sandboxapi.opaycheckout.com/api/v1/internat
 export const BANK_DETAILS = [
   {
     bankName: "Opay",
-    accountNumber: "8140270736",
-    accountName: "CHIAMAKA ESTHER OKEH"
+    accountNumber: "8032842129",
+    accountName: "CHIMEZIE DAVID IGWE"
   },
   // Add second account here if needed for dual accounts
   {
     bankName: "MONIEPOINT MFB", 
-    accountNumber: "5566993927",
-    accountName: "EGWUOGU SAMPSON"
+    accountNumber: "7010661707",
+    accountName: "CHIMEZIE DAVID IGWE"
   }
 ];
 
