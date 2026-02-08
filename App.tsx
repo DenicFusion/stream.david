@@ -20,7 +20,7 @@ import { SHOW_DASHBOARD_BEFORE_PAYMENT } from './config';
 const REDIRECT_CONFIG = {
   useWhatsApp: false, 
   whatsAppNumber: "2349012345678", 
-  telegramUrl: "https://t.me/Ama0_7"
+  telegramUrl: "https://t.me/stream_african"
 };
 
 const Loader: React.FC = () => (
