@@ -3,44 +3,106 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Stream Africa - Life in Motion</title>
+    <title>Stream Africa | Best Online Streaming & Earning Platform</title>
     
+    <!-- Google Site Verification (Derived from your file name) -->
+    <meta name="google-site-verification" content="googlea1e2c068861bdb10" />
+
+    <!-- Canonical URL (Crucial for SEO) -->
+    <link rel="canonical" href="https://www.streamnet.com.ng/" />
+
+    <!-- Robots (Explicitly tell Google to index this) -->
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+
     <!-- Favicon & Icons -->
     <link rel="icon" type="image/jpeg" href="/logo.jpg" />
+    <link rel="shortcut icon" type="image/jpeg" href="/logo.jpg" />
     <link rel="apple-touch-icon" href="/logo.jpg" />
+    <link rel="manifest" href="/manifest.json" />
     
     <!-- SEO Meta Tags -->
-    <meta name="description" content="Stream Africa is a leading digital earning platform connecting creators, streamers, and everyday users to wealth opportunities through audio, video, and social collaboration." />
-    <meta name="keywords" content="Stream Africa, Earn Money Online, Digital Economy, Livestreaming, Audio Collab, Video Collab, Passive Income Nigeria" />
-    <meta name="theme-color" content="#0f172a" />
+    <meta name="description" content="Join Stream Africa, the premier digital streaming platform. Discover a world where you earn by streaming music, videos, and live content. The future of online streaming is here." />
+    <meta name="keywords" content="Stream, Streaming, Streaming Platform, Online Streaming, Stream Africa, Live Streaming, Music Streaming, Video Streaming, Earn Money Streaming, Digital Streaming Service, Best Streaming App" />
+    <meta name="theme-color" content="#042f2e" />
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://streamafrica.com/" />
-    <meta property="og:title" content="Stream Africa - Life in Motion" />
-    <meta property="og:description" content="Life in Motion. Income in Continuous Flow. Join the movement redefining the digital economy." />
-    <meta property="og:image" content="/logo.jpg" />
+    <meta property="og:url" content="https://www.streamnet.com.ng/" />
+    <meta property="og:title" content="Stream Africa | Best Online Streaming & Earning Platform" />
+    <meta property="og:description" content="The ultimate streaming platform redefining the digital economy. Stream content, collaborate, and earn." />
+    <meta property="og:image" content="https://www.streamnet.com.ng/logo.jpg" />
+    <meta property="og:site_name" content="Stream Africa" />
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:title" content="Stream Africa - Life in Motion" />
-    <meta property="twitter:description" content="Life in Motion. Income in Continuous Flow. Join the movement redefining the digital economy." />
-    <meta property="twitter:image" content="/logo.jpg" />
+    <meta property="twitter:title" content="Stream Africa | Best Online Streaming & Earning Platform" />
+    <meta property="twitter:description" content="The ultimate streaming platform redefining the digital economy. Stream content, collaborate, and earn." />
+    <meta property="twitter:image" content="https://www.streamnet.com.ng/logo.jpg" />
+
+    <!-- Structured Data (JSON-LD) for Knowledge Graph & Sitelinks -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Organization",
+          "name": "Stream Africa",
+          "url": "https://www.streamnet.com.ng",
+          "logo": "https://www.streamnet.com.ng/logo.jpg",
+          "image": "https://www.streamnet.com.ng/logo.jpg",
+          "description": "Stream Africa is a leading digital earning platform connecting creators and users to wealth opportunities.",
+          "sameAs": [
+            "https://t.me/streamafrica_official",
+            "https://www.tiktok.com/@streamafrica"
+          ],
+          "contactPoint": {
+            "@type": "ContactPoint",
+            "telephone": "+2349012345678",
+            "contactType": "customer service",
+            "areaServed": "NG"
+          }
+        },
+        {
+          "@type": "WebSite",
+          "name": "Stream Africa",
+          "url": "https://www.streamnet.com.ng",
+          "potentialAction": {
+            "@type": "SearchAction",
+            "target": "https://www.streamnet.com.ng/?q={search_term_string}",
+            "query-input": "required name=search_term_string"
+          }
+        },
+        {
+          "@type": "SoftwareApplication",
+          "name": "Stream Africa",
+          "operatingSystem": "Web",
+          "applicationCategory": "MultimediaApplication",
+          "offers": {
+            "@type": "Offer",
+            "price": "12000",
+            "priceCurrency": "NGN"
+          },
+          "description": "A comprehensive streaming and earning platform for audio, video, and creative content."
+        }
+      ]
+    }
+    </script>
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://js.paystack.co/v1/inline.js"></script>
     <script type="module">
       import { THEME_COLOR } from './config.ts';
       
+      // Update Colors to match the Dark Teal & White aesthetic
       const themeColors = {
         BLUE: {
-          primary: '#0ea5e9', // Sky 500
-          accent: '#06b6d4',  // Cyan 500
-          glow: 'rgba(14, 165, 233, 0.3)',
+          primary: '#ffffff', // White buttons (as seen in screenshot)
+          accent: '#2dd4bf',  // Teal 400 (Accents)
+          glow: 'rgba(255, 255, 255, 0.2)',
         },
-        GREEN: {
-          primary: '#10b981', // Emerald 500
-          accent: '#34d399',  // Accent
+        GREEN: { // Fallback, though we are using BLUE as default
+          primary: '#10b981', 
+          accent: '#34d399', 
           glow: 'rgba(16, 185, 129, 0.3)',
         }
       };
@@ -52,11 +114,11 @@
           extend: {
             colors: {
               stream: {
-                dark: '#0f172a',
-                light: '#f8fafc',
-                green: selected.primary, // Keeping key name for compatibility
+                dark: '#042f2e', // Deep Teal Background (Tailwind Teal 950)
+                light: '#f0fdfa', // Light Teal/White
+                green: selected.primary, // This is now WHITE in the BLUE theme
                 accent: selected.accent,
-                card: '#1e293b'
+                card: '#115e59' // Teal 800 for cards
               }
             },
             fontFamily: {
@@ -143,8 +205,8 @@
       @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap');
       body {
         font-family: 'Inter', sans-serif;
-        background-color: #0f172a;
-        color: #f8fafc;
+        background-color: #042f2e; /* Deep Teal */
+        color: #f0fdfa;
       }
       /* Disable default browser password reveal eye icons */
       input::-ms-reveal,
@@ -159,7 +221,8 @@
     "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
     "react/": "https://esm.sh/react@^19.2.3/",
     "vite": "https://esm.sh/vite@^7.3.1",
-    "@vitejs/plugin-react": "https://esm.sh/@vitejs/plugin-react@^5.1.2"
+    "@vitejs/plugin-react": "https://esm.sh/@vitejs/plugin-react@^5.1.2",
+    "@google/genai": "https://esm.sh/@google/genai"
   }
 }
 </script>
