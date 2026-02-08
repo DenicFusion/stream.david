@@ -34,7 +34,7 @@ export const ScrollToTop: React.FC = () => {
           onClick={scrollToTop}
           className={`fixed bottom-8 right-8 z-50 p-4 rounded-full shadow-2xl transition-all duration-300 focus:outline-none transform hover:scale-110 active:scale-90 flex items-center justify-center group overflow-hidden ${
             isBlue 
-            ? 'bg-gradient-to-br from-sky-400 to-blue-600 shadow-sky-500/40' 
+            ? 'bg-gradient-to-br from-teal-500 to-cyan-600 shadow-teal-500/40' 
             : 'bg-gradient-to-br from-stream-green to-emerald-600 shadow-stream-green/40'
           }`}
           aria-label="Scroll to top"

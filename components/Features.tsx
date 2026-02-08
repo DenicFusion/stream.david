@@ -5,17 +5,21 @@ import { THEME_COLOR } from '../config';
 const FeatureCard: React.FC<FeatureProps> = ({ title, description, price, icon, image, reverse }) => {
   const isBlue = THEME_COLOR === 'BLUE';
   
+  // Updated Colors: Using Teal/Cyan for "Blue" theme to match Deep Teal bg
+  const iconBg = isBlue ? 'bg-teal-500/10 text-teal-400 border-teal-500/20' : 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20';
+  const priceTag = isBlue ? 'text-cyan-300 border-cyan-500/30 bg-cyan-500/10' : 'text-emerald-400 border-emerald-500/30 bg-emerald-500/10';
+
   return (
     <div className={`flex flex-col ${reverse ? 'lg:flex-row-reverse' : 'lg:flex-row'} items-center gap-16 py-20 border-b border-white/5 last:border-0`}>
       
       {/* TEXT BLOCK */}
       <div className="w-full lg:w-1/2 space-y-6">
-        <div className={`w-14 h-14 rounded-lg ${isBlue ? 'bg-sky-500/10 text-sky-500 border-sky-500/20' : 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20'} flex items-center justify-center border mb-4`}>
+        <div className={`w-14 h-14 rounded-lg ${iconBg} flex items-center justify-center border mb-4`}>
           {icon}
         </div>
         <h3 className="text-3xl font-bold text-white tracking-tight">{title}</h3>
         {price && (
-          <div className={`inline-flex items-center px-4 py-2 rounded-md bg-white/5 border border-white/10 ${isBlue ? 'text-sky-400' : 'text-emerald-400'} font-mono font-medium`}>
+          <div className={`inline-flex items-center px-4 py-2 rounded-md border ${priceTag} font-mono font-medium`}>
             <span className="mr-2">Potential Earnings:</span>
             <span className="text-white font-bold">{price}</span>
           </div>
@@ -42,6 +46,7 @@ const FeatureCard: React.FC<FeatureProps> = ({ title, description, price, icon, 
 };
 
 export const Features: React.FC = () => {
+  const isBlue = THEME_COLOR === 'BLUE';
   const features: FeatureProps[] = [
     {
       title: "Audio Collaboration",
@@ -91,12 +96,62 @@ export const Features: React.FC = () => {
   return (
     <section id="features" className="py-24 bg-stream-dark relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-20">
+        <div className="text-center mb-16">
           <h2 className="text-4xl font-extrabold text-white mb-6">Earning Ecosystem</h2>
-          <div className={`w-24 h-1 ${THEME_COLOR === 'BLUE' ? 'bg-sky-500' : 'bg-stream-green'} mx-auto rounded-full mb-6`}></div>
+          <div className={`w-24 h-1 ${isBlue ? 'bg-teal-500' : 'bg-stream-green'} mx-auto rounded-full mb-6`}></div>
           <p className="text-gray-400 text-xl max-w-2xl mx-auto">
             A comprehensive suite of tools designed to monetize digital engagement through multiple high-value streams.
           </p>
+        </div>
+
+        {/* Access Fee & Benefits Card - Resized to Medium (max-w-3xl) */}
+        <div className="mb-24 relative z-10 max-w-3xl mx-auto">
+          {/* Updated Gradient to match Deep Teal/Cyan */}
+          <div className={`rounded-3xl p-0.5 bg-gradient-to-r ${isBlue ? 'from-teal-600 to-cyan-600' : 'from-stream-green to-emerald-600'} shadow-2xl`}>
+            <div className="bg-[#0f2e2e] rounded-[1.4rem] p-6 md:p-8 grid md:grid-cols-2 gap-8 items-center border border-white/5">
+              
+              {/* Access Fee Section */}
+              <div className="text-center md:text-left space-y-3">
+                <div className={`inline-block px-3 py-1 rounded-full border ${isBlue ? 'border-cyan-500/30 bg-cyan-900/30 text-cyan-300' : 'border-emerald-500/30 bg-emerald-500/10 text-emerald-400'} text-xs font-bold uppercase tracking-widest`}>
+                  Membership Pass
+                </div>
+                <div>
+                    <h3 className="text-gray-400 font-medium text-xs uppercase tracking-wider mb-1">One-Time Access Fee</h3>
+                    <div className="flex items-baseline justify-center md:justify-start gap-2">
+                        <span className="text-4xl md:text-5xl font-extrabold text-white">₦12,000</span>
+                        <span className="text-lg text-gray-500 font-medium">/ Lifetime</span>
+                    </div>
+                </div>
+                <p className="text-gray-400 text-sm leading-relaxed font-medium">
+                   Unlock full access to the streaming ecosystem!!!
+                </p>
+              </div>
+
+              {/* Benefits List */}
+              <div className={`border-t md:border-t-0 md:border-l ${isBlue ? 'border-teal-500/20' : 'border-emerald-500/20'} pt-6 md:pt-0 md:pl-8`}>
+                <h3 className="text-white font-bold text-base mb-4">What You Get</h3>
+                <ul className="space-y-3">
+                  {[
+                    "Lifetime Platform Access",
+                    "Unlock All Income Channels",
+                    "Daily & Weekly Withdrawals",
+                    "Access to Stream Academy",
+                    "24/7 Priority Support"
+                  ].map((benefit, i) => (
+                    <li key={i} className="flex items-start gap-2.5 text-gray-300 group">
+                       <div className={`mt-0.5 w-4 h-4 rounded-full flex items-center justify-center ${isBlue ? 'bg-cyan-500/20 text-cyan-400' : 'bg-emerald-500/20 text-stream-green'}`}>
+                         <svg className="w-2.5 h-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" />
+                         </svg>
+                       </div>
+                       <span className="text-sm font-medium group-hover:text-white transition-colors">{benefit}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+            </div>
+          </div>
         </div>
         
         <div className="space-y-4">

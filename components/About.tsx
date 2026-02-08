@@ -8,17 +8,17 @@ export const About: React.FC = () => {
           <div>
              <h2 className="text-sm font-bold text-stream-green uppercase tracking-widest mb-3">Our Vision</h2>
              <h3 className="text-3xl md:text-4xl font-bold text-white mb-6 leading-tight">
-               Turning entertainment into income for everyday digital creators.
+               The #1 Streaming Platform turning entertainment into income.
              </h3>
              <div className="space-y-6 text-gray-400 text-lg leading-relaxed">
                <p>
-                 Stream is built on one powerful vision: to turn entertainment into income for everyday Africans and digital creators around the world.
+                 Stream Africa is built on one powerful vision: to turn the act of <strong>streaming</strong> into income for everyday Africans and digital creators around the world.
                </p>
                <p>
-                 Through strategic partnerships with record labels, movie studios, streaming platforms, and content distribution companies, we create a system where people don’t just watch, listen, or engage — they collaborate and earn from it.
+                 Through strategic partnerships with record labels, movie studios, and content distribution companies, we create a <strong>streaming ecosystem</strong> where people don’t just watch, listen, or engage — they collaborate and earn from it.
                </p>
                <p>
-                 Stream is not just a platform. It is a new economic pathway where creativity, attention, and community convert into real, sustainable wealth.
+                 Stream is not just a website. It is the premier <strong>digital streaming platform</strong> where creativity, attention, and community convert into real, sustainable wealth.
                </p>
              </div>
           </div>

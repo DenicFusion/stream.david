@@ -14,10 +14,16 @@ export const Button: React.FC<ButtonProps> = ({
 }) => {
   const baseStyles = "px-6 py-3 rounded-lg font-bold transition-all duration-300 transform hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed";
   
+  // Updated variants for new Deep Teal & White theme
   const variants = {
-    primary: "bg-stream-green text-white hover:bg-stream-accent shadow-lg shadow-stream-green/20",
-    secondary: "bg-white text-stream-dark hover:bg-gray-100",
-    outline: "border-2 border-stream-green text-stream-green hover:bg-stream-green hover:text-white"
+    // Primary: WHITE background with STRICT BLACK text as requested
+    primary: "bg-white text-black hover:bg-gray-100 shadow-lg shadow-white/10",
+    
+    // Secondary: Dark Teal with White text
+    secondary: "bg-stream-card text-white hover:bg-teal-800",
+    
+    // Outline: White Border with White Text
+    outline: "border-2 border-white text-white hover:bg-white hover:text-black"
   };
 
   return (

@@ -39,19 +39,19 @@ export const NotificationToast: React.FC<NotificationToastProps> = ({ type }) =>
     return () => clearTimeout(timeoutId);
   }, []);
 
-  // Center horizontally using left-1/2 and use keyframes defined in index.html
-  // slideDown/slideUp handle the translate(-50%, ...) logic
+  // Animation classes handled in index.html, but we ensure left-1/2 and translation logic works
   const animationClass = visible ? 'animate-slideDown' : 'animate-slideUp';
 
   const avatarLetter = data.name.charAt(0).toUpperCase();
   
-  const activateColor = isBlue ? 'bg-indigo-600' : 'bg-emerald-500';
-  const registerColor = isBlue ? 'bg-sky-600' : 'bg-blue-600';
+  // Updated colors to match Deep Teal theme (Teal/Cyan instead of Blue/Indigo)
+  const activateColor = isBlue ? 'bg-teal-600' : 'bg-emerald-500';
+  const registerColor = isBlue ? 'bg-cyan-600' : 'bg-blue-600';
   const avatarBg = type === 'ACTIVATE' ? activateColor : registerColor;
 
   return (
-    <div className={`fixed top-4 left-1/2 z-[60] w-[90%] max-w-[360px] ${animationClass}`}>
-      <div className="bg-[#1c1c1e]/90 backdrop-blur-xl border border-white/10 shadow-2xl rounded-[2rem] p-3 pr-5 flex items-center gap-3">
+    <div className={`fixed top-6 left-1/2 transform -translate-x-1/2 z-[60] w-[90%] max-w-[360px] ${animationClass}`}>
+      <div className="bg-[#0f2e2e]/95 backdrop-blur-xl border border-teal-500/30 shadow-2xl rounded-[2rem] p-3 pr-5 flex items-center gap-3 ring-1 ring-white/10">
         
         {/* Avatar Icon */}
         <div className={`w-10 h-10 min-w-[2.5rem] rounded-full flex items-center justify-center text-white font-bold text-lg shadow-lg ${avatarBg}`}>
@@ -64,11 +64,11 @@ export const NotificationToast: React.FC<NotificationToastProps> = ({ type }) =>
             <p className="text-white text-sm font-semibold truncate pr-2">
               {data.name}
             </p>
-            <span className="text-gray-500 text-[10px] font-medium whitespace-nowrap">
+            <span className="text-teal-200/60 text-[10px] font-medium whitespace-nowrap">
               {data.time}
             </span>
           </div>
-          <p className="text-gray-400 text-xs truncate leading-tight">
+          <p className="text-gray-300 text-xs truncate leading-tight">
             {type === 'ACTIVATE' ? 'Activated Lifetime Access 💎' : 'Registered on Stream Africa 🚀'}
           </p>
         </div>
