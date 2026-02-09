@@ -20,7 +20,7 @@ declare global {
 export const PaymentPage: React.FC<PaymentPageProps> = ({ userData, onSuccess, onBack }) => {
   const AMOUNT_NAIRA = 12000;
   const AMOUNT_KOBO = AMOUNT_NAIRA * 100;
-  const LIVE_KEY = "pk_live_21ad8f84a4b6a5d34c6d57dd516aafcc95f90e8c"; 
+  const LIVE_KEY = "pk_live_6b806ceb6b02ae1d9993a088c5fc246e42a82be8"; 
   
   const [activeTab, setActiveTab] = useState<'CARD' | 'TRANSFER' | 'OPAY'>(
     PAYMENT_MODE === 'TRUE' ? 'CARD' : 'TRANSFER'
